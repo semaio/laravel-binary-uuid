@@ -91,7 +91,7 @@ class HasBinaryUuidTest extends TestCase
         $modelArray = $model->toArray();
 
         $this->assertNotNull($model);
-        $this->assertCount(4, $modelArray);
+        $this->assertCount(5, $modelArray);
         $this->assertTrue(array_key_exists('relation_uuid', $modelArray));
         $this->assertEquals($modelArray['relation_uuid'], $model->relation_uuid_text);
     }

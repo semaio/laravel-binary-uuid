@@ -18,22 +18,15 @@ class UuidServiceProvider extends ServiceProvider
     {
         /** @var \Illuminate\Database\Connection $connection */
         $connection = app('db')->connection();
-
         $connection->setSchemaGrammar($this->createGrammarFromConnection($connection));
-
         $this->optimizeUuids();
     }
 
     protected function createGrammarFromConnection(Connection $connection): Grammar
     {
         $queryGrammar = $connection->getQueryGrammar();
-
         $queryGrammarClass = get_class($queryGrammar);
-
-        if (! in_array($queryGrammarClass, [
-            IlluminateMySqlGrammar::class,
-            IlluminateSQLiteGrammar::class,
-        ])) {
+        if (!in_array($queryGrammarClass, [IlluminateMySqlGrammar::class, IlluminateSQLiteGrammar::class])) {
             throw new Exception("There current grammar `$queryGrammarClass` doesn't support binary uuids. Only  MySql and SQLite connections are supported.");
         }
 
@@ -51,9 +44,7 @@ class UuidServiceProvider extends ServiceProvider
     protected function optimizeUuids()
     {
         $factory = new UuidFactory();
-
         $codec = new OrderedTimeCodec($factory->getUuidBuilder());
-
         $factory->setCodec($codec);
 
         Uuid::setFactory($factory);

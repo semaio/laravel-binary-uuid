@@ -2,6 +2,7 @@
 
 namespace Spatie\BinaryUuid;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,11 @@ trait HasBinaryUuid
     protected static function bootHasBinaryUuid()
     {
         static::creating(function (Model $model) {
-            if ($model->{$model->getKeyName()}) {
+            if ($model->{$model->getUuidKeyName()}) {
                 return;
             }
 
-            $model->{$model->getKeyName()} = static::encodeUuid(static::generateUuid());
+            $model->{$model->getUuidKeyName()} = static::encodeUuid(static::generateUuid());
         });
     }
 
@@ -25,41 +26,47 @@ trait HasBinaryUuid
         }
 
         if ($uuid instanceof Uuid) {
-            $uuid = (string) $uuid;
+            $uuid = (string)$uuid;
         }
 
-        $uuid = (array) $uuid;
+        $uuid = (array)$uuid;
 
-        return $builder->whereKey(array_map(function (string $modelUuid) {
+        $id = array_map(function (string $modelUuid) {
             return static::encodeUuid($modelUuid);
-        }, $uuid));
+        }, $uuid);
+
+        if (is_array($id) || $id instanceof Arrayable) {
+            return $builder->whereIn(static::getStaticUuidKeyName(), $id);
+        }
+
+        return $builder->where(static::getStaticUuidKeyName(), '=', $id);
     }
 
     public static function scopeWithUuidRelation(Builder $builder, $uuid, string $field): Builder
     {
         if ($uuid instanceof Uuid) {
-            $uuid = (string) $uuid;
+            $uuid = (string)$uuid;
         }
 
-        $uuid = (array) $uuid;
+        $uuid = (array)$uuid;
 
         return $builder->whereIn($field, array_map(function (string $modelUuid) {
             return static::encodeUuid($modelUuid);
         }, $uuid));
     }
 
-    public static function generateUuid() : string
+    public static function generateUuid(): string
     {
         return Uuid::uuid1();
     }
 
     public static function encodeUuid($uuid): string
     {
-        if (! Uuid::isValid($uuid)) {
+        if (!Uuid::isValid($uuid)) {
             return $uuid;
         }
 
-        if (! $uuid instanceof Uuid) {
+        if (!$uuid instanceof Uuid) {
             $uuid = Uuid::fromString($uuid);
         }
 
@@ -80,13 +87,12 @@ trait HasBinaryUuid
         $uuidAttributes = $this->getUuidAttributes();
 
         $array = parent::toArray();
-
-        if (! $this->exists || ! is_array($uuidAttributes)) {
+        if (!$this->exists || !is_array($uuidAttributes)) {
             return $array;
         }
 
         foreach ($uuidAttributes as $attributeKey) {
-            if (! array_key_exists($attributeKey, $array)) {
+            if (!array_key_exists($attributeKey, $array)) {
                 continue;
             }
             $uuidKey = $this->getRelatedBinaryKeyName($attributeKey);
@@ -106,7 +112,6 @@ trait HasBinaryUuid
     public function getAttribute($key)
     {
         $uuidKey = $this->uuidTextAttribute($key);
-
         if ($uuidKey && $this->{$uuidKey} !== null) {
             return static::decodeUuid($this->{$uuidKey});
         }
@@ -150,7 +155,7 @@ trait HasBinaryUuid
         }
 
         // non composite primary keys will return a string so casting required
-        $key = (array) $this->getKeyName();
+        $key = (array)$this->getUuidKeyName();
 
         $uuidAttributes = array_unique(array_merge($uuidAttributes, $key));
 
@@ -159,9 +164,9 @@ trait HasBinaryUuid
 
     public function getUuidTextAttribute(): ?string
     {
-        $key = $this->getKeyName();
+        $key = $this->getUuidKeyName();
 
-        if (! $this->exists || is_array($key)) {
+        if (!$this->exists || is_array($key)) {
             return null;
         }
 
@@ -170,7 +175,7 @@ trait HasBinaryUuid
 
     public function setUuidTextAttribute(string $uuid)
     {
-        $key = $this->getKeyName();
+        $key = $this->getUuidKeyName();
 
         if (is_array($key)) {
             return;
@@ -181,12 +186,12 @@ trait HasBinaryUuid
 
     public function getQueueableId()
     {
-        return base64_encode($this->{$this->getKeyName()});
+        return base64_encode($this->{$this->getUuidKeyName()});
     }
 
     public function newQueryForRestoration($id)
     {
-        return $this->newQueryWithoutScopes()->whereKey(base64_decode($id));
+        return $this->newQueryWithoutScopes()->where($this->getUuidKeyName(), '=', base64_decode($id));
     }
 
     public function newEloquentBuilder($query)
@@ -201,14 +206,14 @@ trait HasBinaryUuid
         return "uuid{$suffix}";
     }
 
-    public function getKeyName()
+    public function getUuidKeyName()
     {
         return 'uuid';
     }
 
-    public function getIncrementing()
+    public static function getStaticUuidKeyName()
     {
-        return false;
+        return 'uuid';
     }
 
     public function resolveRouteBinding($value)

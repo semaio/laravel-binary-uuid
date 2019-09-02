@@ -9,7 +9,7 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -18,18 +18,16 @@ class TestCase extends Orchestra
 
     protected function getPackageProviders($app): array
     {
-        return [
-            UuidServiceProvider::class,
-        ];
+        return [UuidServiceProvider::class];
     }
 
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
     }
 
@@ -38,9 +36,9 @@ class TestCase extends Orchestra
         Schema::dropIfExists('test');
 
         Schema::create('test', function (Blueprint $table) {
+            $table->increments('id');
             $table->uuid('uuid');
             $table->uuid('relation_uuid')->nullable();
-
             $table->timestamps();
         });
     }
