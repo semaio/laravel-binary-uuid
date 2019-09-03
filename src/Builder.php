@@ -11,7 +11,7 @@ class Builder extends EloquentBuilder
      *
      * @param mixed $id
      * @param array $columns
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|static[]|static|null
+     * @return EloquentBuilder|EloquentBuilder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|object|Builder|null
      */
     public function find($id, $columns = ['*'])
     {
@@ -23,7 +23,7 @@ class Builder extends EloquentBuilder
             return $this->withUuid($id)->first($columns);
         }
 
-        return parent::find($id)->first($columns);
+        return $this->whereKey($id)->first($columns);
     }
 
     /**
