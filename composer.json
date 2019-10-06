@@ -1,51 +1,51 @@
 {
-    "name": "semaio/laravel-binary-uuid",
-    "description": "Binary support for UUIDs in Laravel",
-    "keywords": [
-        "spatie",
-        "laravel-binary-uuid"
-    ],
-    "homepage": "https://github.com/semaio/laravel-binary-uuid",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Brent Roose",
-            "email": "brent@spatie.be",
-            "homepage": "https://spatie.be",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^7.1",
-        "illuminate/queue": "~5.5.28|~5.6.0|~5.7.0|~5.8.0",
-        "ramsey/uuid": "^3.7"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^3.5|~3.6.0|~3.7.0",
-        "phpunit/phpunit": "^6.5|^7.0",
-        "scrutinizer/ocular": "^1.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "Spatie\\BinaryUuid\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Spatie\\BinaryUuid\\Test\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Spatie\\BinaryUuid\\UuidServiceProvider"
-            ]
-        }
+  "name": "semaio/laravel-binary-uuid",
+  "description": "Binary support for UUIDs in Laravel",
+  "keywords": [
+    "spatie",
+    "laravel-binary-uuid"
+  ],
+  "homepage": "https://github.com/semaio/laravel-binary-uuid",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Brent Roose",
+      "email": "brent@spatie.be",
+      "homepage": "https://spatie.be",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": "^7.1|^7.2",
+    "illuminate/queue": "^5.8|^6.0",
+    "ramsey/uuid": "^3.8"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^3.8|^4.0",
+    "phpunit/phpunit": "^7.0|^8.0",
+    "scrutinizer/ocular": "^1.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Spatie\\BinaryUuid\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Spatie\\BinaryUuid\\Test\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Spatie\\BinaryUuid\\UuidServiceProvider"
+      ]
+    }
+  }
 }
