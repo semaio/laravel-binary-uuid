@@ -16,14 +16,14 @@
     }
   ],
   "require": {
-    "php": "^7.1|^7.2",
-    "illuminate/queue": "^5.8|^6.0",
-    "ramsey/uuid": "^3.8"
+    "php": "^7.2",
+    "illuminate/queue": "^6.0|^7.0",
+    "ramsey/uuid": "^3.9"
   },
   "require-dev": {
-    "orchestra/testbench": "^3.8|^4.0",
-    "phpunit/phpunit": "^7.0|^8.0",
-    "scrutinizer/ocular": "^1.5"
+    "graham-campbell/testbench": "^5.4",
+    "phpunit/phpunit": "^8.5",
+    "scrutinizer/ocular": "^1.7"
   },
   "autoload": {
     "psr-4": {
