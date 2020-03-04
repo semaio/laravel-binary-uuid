@@ -216,7 +216,7 @@ trait HasBinaryUuid
         return 'uuid';
     }
 
-    public function resolveRouteBinding($value)
+    public function resolveRouteBinding($value, $field = null)
     {
         return $this->withUuid($value)->first();
     }
