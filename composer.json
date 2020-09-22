@@ -17,8 +17,8 @@
   ],
   "require": {
     "php": "^7.2",
-    "illuminate/queue": "^6.0|^7.0",
-    "ramsey/uuid": "^3.9"
+    "illuminate/queue": "^6.0|^7.0|^8.0",
+    "ramsey/uuid": "^3.9|^4.0"
   },
   "require-dev": {
     "graham-campbell/testbench": "^5.4",
